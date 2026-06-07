@@ -898,6 +898,251 @@
     box-shadow: 0 0 40px rgba(212,168,71,0.4);
   }
 
+  /* ============ NEW BEGINNING SECTION ============ */
+  #new-beginning {
+    min-height: 100vh;
+    background: #0d0408;
+    display: flex; flex-direction: column;
+    align-items: center; justify-content: center;
+    text-align: center;
+    padding: 3rem 1.5rem 5rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  /* Stage layers */
+  #nb-polaroids-stage {
+    position: absolute; inset: 0;
+    pointer-events: none;
+    z-index: 2;
+  }
+
+  .nb-polaroid {
+    position: absolute;
+    background: #fff;
+    padding: 10px 10px 28px;
+    box-shadow: 0 8px 30px rgba(0,0,0,0.55), 0 2px 8px rgba(0,0,0,0.3);
+    border-radius: 2px;
+    will-change: transform, opacity;
+    transition: transform 2.5s cubic-bezier(0.23,1,0.32,1), opacity 2.5s ease;
+    cursor: default;
+    overflow: hidden;
+  }
+  .nb-polaroid-img {
+    width: 100%;
+    aspect-ratio: 1;
+    object-fit: cover;
+    display: block;
+    filter: sepia(15%) saturate(110%);
+  }
+  .nb-polaroid-img.placeholder-img {
+    background: linear-gradient(135deg, #f5c5d5, #e8a0b8, #f0d0a0);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.6rem;
+  }
+  .nb-polaroid-label {
+    font-family: 'Dancing Script', cursive;
+    font-size: 0.75rem;
+    color: #6a3040;
+    text-align: center;
+    margin-top: 5px;
+    white-space: nowrap;
+    overflow: hidden;
+    text-overflow: ellipsis;
+  }
+
+  /* Bloom transition overlay */
+  #nb-bloom {
+    position: absolute; inset: 0;
+    z-index: 3;
+    background: radial-gradient(circle at 50% 50%, rgba(240,200,120,0.95) 0%, rgba(200,100,80,0.7) 40%, transparent 70%);
+    opacity: 0;
+    pointer-events: none;
+    transition: opacity 1.2s ease;
+  }
+  #nb-bloom.show { opacity: 1; }
+  #nb-bloom.hide { opacity: 0; transition: opacity 1.5s ease; }
+
+  /* Golden particles canvas */
+  #nb-particles-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 4;
+    opacity: 0;
+    transition: opacity 1s ease;
+  }
+  #nb-particles-canvas.show { opacity: 1; }
+
+  /* New photo */
+  #nb-photo-wrap {
+    position: relative; z-index: 5;
+    opacity: 0;
+    transform: scale(0.88);
+    transition: opacity 1.8s ease, transform 1.8s cubic-bezier(0.34,1.56,0.64,1);
+    margin-bottom: 2.5rem;
+  }
+  #nb-photo-wrap.show {
+    opacity: 1; transform: scale(1);
+  }
+  .nb-halo {
+    position: absolute; inset: -20px;
+    border-radius: 50%;
+    background: radial-gradient(circle, rgba(240,208,128,0.5) 0%, rgba(212,168,71,0.2) 40%, transparent 70%);
+    animation: halo-breathe 3s ease-in-out infinite;
+    pointer-events: none;
+    z-index: -1;
+  }
+  @keyframes halo-breathe {
+    0%,100% { transform: scale(1); opacity: 0.7; }
+    50% { transform: scale(1.15); opacity: 1; }
+  }
+  .nb-halo-ring {
+    position: absolute; inset: -6px;
+    border-radius: 20px;
+    border: 1.5px solid rgba(240,208,128,0.4);
+    animation: halo-breathe 3s ease-in-out infinite 0.5s;
+  }
+  #nb-new-photo {
+    width: min(260px, 72vw);
+    aspect-ratio: 3/4;
+    object-fit: cover;
+    display: block;
+    border-radius: 16px;
+    border: 3px solid rgba(240,208,128,0.6);
+    box-shadow:
+      0 0 0 1px rgba(212,168,71,0.3),
+      0 0 40px rgba(240,208,128,0.35),
+      0 20px 60px rgba(0,0,0,0.6);
+    filter: brightness(1.05) saturate(1.1);
+  }
+  #nb-new-photo.placeholder {
+    background: linear-gradient(145deg, #3a1020 0%, #5c1a35 50%, #3a1020 100%);
+    display: flex; align-items: center; justify-content: center;
+  }
+
+  /* Quote typewriter */
+  #nb-quote-wrap {
+    position: relative; z-index: 5;
+    opacity: 0;
+    transition: opacity 1.2s ease;
+    max-width: 340px;
+    padding: 0 1rem;
+  }
+  #nb-quote-wrap.show { opacity: 1; }
+
+  #nb-quote-line1 {
+    font-family: 'Dancing Script', cursive;
+    font-size: clamp(1.4rem, 6vw, 2.2rem);
+    color: var(--star-white);
+    line-height: 1.3;
+    text-shadow: 0 0 30px rgba(240,208,128,0.5), 0 0 60px rgba(240,208,128,0.2);
+    min-height: 2.8rem;
+  }
+  #nb-quote-line2 {
+    font-family: 'Cormorant Garamond', serif;
+    font-style: italic;
+    font-size: clamp(1.1rem, 4.5vw, 1.6rem);
+    color: var(--blush);
+    margin-top: 0.8rem;
+    text-shadow: 0 0 20px rgba(242,167,181,0.4);
+    min-height: 2rem;
+  }
+
+  /* Cursor blink */
+  .nb-cursor {
+    display: inline-block;
+    width: 2px; height: 1.1em;
+    background: var(--soft-gold);
+    margin-left: 2px;
+    vertical-align: middle;
+    animation: cursor-blink 0.8s step-end infinite;
+  }
+  @keyframes cursor-blink {
+    0%,100% { opacity: 1; } 50% { opacity: 0; }
+  }
+
+  /* Final overlay — warm dark rose fade */
+  #nb-final-overlay {
+    position: absolute; inset: 0;
+    background: radial-gradient(ellipse at 50% 60%, #3a0818 0%, #1a0410 100%);
+    opacity: 0;
+    z-index: 1;
+    pointer-events: none;
+    transition: opacity 4s ease;
+  }
+  #nb-final-overlay.show { opacity: 0.75; }
+
+  /* Petals canvas */
+  #nb-petals-canvas {
+    position: absolute; inset: 0;
+    width: 100%; height: 100%;
+    pointer-events: none;
+    z-index: 6;
+    opacity: 0;
+    transition: opacity 2s ease;
+  }
+  #nb-petals-canvas.show { opacity: 1; }
+
+  /* Begin button */
+  #nb-begin-btn {
+    position: relative; z-index: 2;
+    margin: 0 auto 4rem;
+    padding: 1.1rem 3rem;
+    background: transparent;
+    border: 1px solid rgba(240,208,128,0.5);
+    color: var(--soft-gold);
+    font-family: 'Cormorant Garamond', serif;
+    font-size: 1.2rem;
+    font-style: italic;
+    letter-spacing: 2px;
+    border-radius: 50px;
+    cursor: pointer;
+    box-shadow: 0 0 30px rgba(212,168,71,0.15), inset 0 0 20px rgba(212,168,71,0.05);
+    transition: box-shadow 0.3s, background 0.3s;
+    -webkit-tap-highlight-color: transparent;
+  }
+  #nb-begin-btn:active {
+    background: rgba(212,168,71,0.08);
+    box-shadow: 0 0 50px rgba(212,168,71,0.3);
+  }
+  #nb-begin-btn .btn-sub {
+    display: block;
+    font-family: 'Lato', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 3px;
+    text-transform: uppercase;
+    color: rgba(240,208,128,0.5);
+    font-style: normal;
+    margin-top: 3px;
+  }
+
+  /* Section heading */
+  #nb-heading {
+    position: relative; z-index: 2;
+    margin-bottom: 3.5rem;
+    opacity: 0;
+    transform: translateY(20px);
+    transition: opacity 1s ease, transform 1s ease;
+  }
+  #nb-heading.show { opacity: 1; transform: translateY(0); }
+  #nb-heading .nb-label {
+    font-family: 'Lato', sans-serif;
+    font-size: 0.65rem;
+    letter-spacing: 5px;
+    text-transform: uppercase;
+    color: rgba(240,208,128,0.5);
+    margin-bottom: 0.6rem;
+  }
+  #nb-heading .nb-title {
+    font-family: 'Cormorant Garamond', serif;
+    font-size: clamp(2rem, 8vw, 3.2rem);
+    font-weight: 300;
+    font-style: italic;
+    color: var(--star-white);
+    text-shadow: 0 0 40px rgba(240,208,128,0.2);
+  }
+
   .shooting-star {
     position: fixed;
     width: 3px; height: 3px;
@@ -1104,6 +1349,49 @@
   </p>
   <p class="closing-sub" id="closingSub">Happy Birthday, Ammu · June 9th</p>
   <button class="wish-btn" id="wishBtn" onclick="shootingStar()">Make a Wish 🌠</button>
+</section>
+
+<!-- NEW BEGINNING -->
+<section id="new-beginning">
+  <!-- Final warm dark overlay -->
+  <div id="nb-final-overlay"></div>
+
+  <!-- Polaroids scattered stage -->
+  <div id="nb-polaroids-stage"></div>
+
+  <!-- Bloom transition -->
+  <div id="nb-bloom"></div>
+
+  <!-- Particle canvases -->
+  <canvas id="nb-particles-canvas"></canvas>
+  <canvas id="nb-petals-canvas"></canvas>
+
+  <!-- Section heading -->
+  <div id="nb-heading">
+    <div class="nb-label">The story continues</div>
+    <div class="nb-title">A New Beginning</div>
+  </div>
+
+  <!-- Start button -->
+  <button id="nb-begin-btn" onclick="startNewBeginning()">
+    Begin the Journey
+    <span class="btn-sub">tap to play</span>
+  </button>
+
+  <!-- New photo (hidden until animation) -->
+  <div id="nb-photo-wrap">
+    <div class="nb-halo"></div>
+    <div class="nb-halo-ring"></div>
+    <img id="nb-new-photo" src="they.jpeg" alt="Ammu"
+         onerror="this.style.display='none';document.getElementById('nb-photo-placeholder').style.display='flex'">
+    <div id="nb-photo-placeholder" style="display:none;width:min(260px,72vw);aspect-ratio:3/4;border-radius:16px;border:3px solid rgba(240,208,128,0.6);box-shadow:0 0 40px rgba(240,208,128,0.35),0 20px 60px rgba(0,0,0,0.6);background:linear-gradient(145deg,#3a1020,#5c2a40,#3a1020);align-items:center;justify-content:center;font-size:4rem;">🌸</div>
+  </div>
+
+  <!-- Typewriter quote -->
+  <div id="nb-quote-wrap">
+    <div id="nb-quote-line1"><span id="nb-text1"></span><span class="nb-cursor" id="nb-cursor1"></span></div>
+    <div id="nb-quote-line2"><span id="nb-text2"></span><span class="nb-cursor" id="nb-cursor2" style="display:none"></span></div>
+  </div>
 </section>
 
 <script>
@@ -1501,16 +1789,13 @@ const observer = new IntersectionObserver((entries) => {
   entries.forEach(entry => {
     if (entry.isIntersecting) {
       entry.target.classList.add('visible');
-
-      // Photo caption
-      if (entry.target.id === 'photoCaption') {
-        entry.target.classList.add('animate');
-      }
-      // Closing section
       if (entry.target.id === 'closingQuote') {
         entry.target.classList.add('animate');
         document.getElementById('closingSub').classList.add('animate');
         document.getElementById('wishBtn').classList.add('animate');
+      }
+      if (entry.target.id === 'nb-heading') {
+        entry.target.classList.add('show');
       }
     }
   });
@@ -1521,10 +1806,271 @@ document.querySelectorAll('.special-card').forEach((card, i) => {
   observer.observe(card);
 });
 
-['photoCaption', 'closingQuote'].forEach(id => {
+['closingQuote', 'nb-heading'].forEach(id => {
   const el = document.getElementById(id);
   if (el) observer.observe(el);
 });
+
+// ============ NEW BEGINNING ANIMATION ============
+
+// Polaroid data — replace MEMORY_X with base64 or img urls
+const nbPolaroids = [
+  { src: 'us\\1.JPG', label: 'Always smiling 🌸' },
+  { src: 'us\\2.JPG', label: 'Pure joy ✨' },
+  { src: 'us\\3.JPG', label: 'Golden days 🌻' },
+  { src: 'us\\4.JPG', label: 'Our memories 💕' },
+  { src: 'us\\5.JPG', label: 'Precious moments 🌺' },
+  { src: 'us\\6.JPG', label: 'Forever loved 💛' },
+  { src: 'us\\7.JPG', label: 'Beautiful you 🌷' },
+  { src: 'us\\8.JPG', label: 'Here we are 🌙' },
+];
+
+let nbStarted = false;
+
+function buildPolaroids() {
+  const stage = document.getElementById('nb-polaroids-stage');
+  stage.innerHTML = '';
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const size = Math.min(vw * 0.28, 120);
+
+  // Positions: a natural cluster near center
+  const positions = [
+    { x: 0.18, y: 0.22, r: -18 },
+    { x: 0.55, y: 0.10, r:  12 },
+    { x: 0.70, y: 0.35, r: -8  },
+    { x: 0.62, y: 0.62, r:  20 },
+    { x: 0.28, y: 0.68, r: -14 },
+    { x: 0.08, y: 0.50, r:  6  },
+    { x: 0.42, y: 0.38, r: -5  },
+    { x: 0.35, y: 0.15, r:  15 },
+  ];
+
+  nbPolaroids.forEach((p, i) => {
+    const pos = positions[i] || { x: Math.random(), y: Math.random(), r: (Math.random()-0.5)*30 };
+    const div = document.createElement('div');
+    div.className = 'nb-polaroid';
+    div.style.cssText = `
+      width:${size}px;
+      left:${pos.x * vw - size/2}px;
+      top:${pos.y * vh - size*0.6}px;
+      transform: rotate(${pos.r}deg) scale(0) translateY(30px);
+      opacity: 0;
+      transition: transform 0.8s cubic-bezier(0.34,1.56,0.64,1) ${i*0.12}s, opacity 0.6s ease ${i*0.12}s;
+    `;
+
+    let imgHtml;
+    if (p.src.startsWith('MEMORY_')) {
+      imgHtml = `<div class="nb-polaroid-img placeholder-img" style="width:100%;aspect-ratio:1;background:linear-gradient(135deg,hsl(${330+i*15},60%,80%),hsl(${20+i*10},70%,75%));display:flex;align-items:center;justify-content:center;font-size:${size*0.28}px">🌸</div>`;
+    } else {
+      imgHtml = `<img class="nb-polaroid-img" src="${p.src}" alt="memory">`;
+    }
+    div.innerHTML = `${imgHtml}<div class="nb-polaroid-label">${p.label}</div>`;
+    stage.appendChild(div);
+  });
+
+  // Animate in
+  requestAnimationFrame(() => {
+    requestAnimationFrame(() => {
+      stage.querySelectorAll('.nb-polaroid').forEach((el, i) => {
+        el.style.transform = `rotate(${positions[i]?.r || 0}deg) scale(1) translateY(0)`;
+        el.style.opacity = '1';
+      });
+    });
+  });
+}
+
+function scatterPolaroids() {
+  const stage = document.getElementById('nb-polaroids-stage');
+  const vw = window.innerWidth;
+  const vh = window.innerHeight;
+  const cards = stage.querySelectorAll('.nb-polaroid');
+  const directions = [
+    [-1.4, -1.2], [0, -1.8], [1.4, -1.2], [1.8, 0],
+    [1.2, 1.4], [0, 1.8], [-1.2, 1.4], [-1.8, 0]
+  ];
+  cards.forEach((card, i) => {
+    const d = directions[i % directions.length];
+    const dist = Math.max(vw, vh) * 0.8;
+    card.style.transition = `transform 2.2s cubic-bezier(0.4,0,0.6,1) ${i*0.08}s, opacity 2s ease ${i*0.1}s`;
+    card.style.transform += ` translate(${d[0]*dist}px, ${d[1]*dist}px) rotate(${(Math.random()-0.5)*40}deg) scale(0.3)`;
+    card.style.opacity = '0';
+  });
+}
+
+function startNewBeginning() {
+  if (nbStarted) return;
+  nbStarted = true;
+
+  const btn = document.getElementById('nb-begin-btn');
+  btn.style.opacity = '0';
+  btn.style.pointerEvents = 'none';
+  btn.style.transition = 'opacity 0.5s ease';
+
+  // Step 1 — build & show polaroids
+  buildPolaroids();
+
+  // Step 2 — scatter after 2s
+  setTimeout(scatterPolaroids, 2200);
+
+  // Step 3 — bloom
+  setTimeout(() => {
+    const bloom = document.getElementById('nb-bloom');
+    bloom.classList.add('show');
+    startGoldenParticles();
+    document.getElementById('nb-particles-canvas').classList.add('show');
+  }, 4600);
+
+  // Step 4 — bloom fades, photo appears
+  setTimeout(() => {
+    document.getElementById('nb-bloom').classList.remove('show');
+    document.getElementById('nb-bloom').classList.add('hide');
+    document.getElementById('nb-photo-wrap').classList.add('show');
+    document.getElementById('nb-heading').style.opacity = '0';
+  }, 6000);
+
+  // Step 5 — quote types out
+  setTimeout(() => {
+    document.getElementById('nb-particles-canvas').style.opacity = '0.4';
+    showNbQuote();
+  }, 7800);
+
+  // Step 6 — final petal rain & dark fade
+  setTimeout(() => {
+    startPetalRain();
+    document.getElementById('nb-petals-canvas').classList.add('show');
+    document.getElementById('nb-final-overlay').classList.add('show');
+  }, 13000);
+}
+
+// ---- Golden particles ----
+function startGoldenParticles() {
+  const canvas = document.getElementById('nb-particles-canvas');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  const particles = [];
+  const cx = canvas.width / 2;
+  const cy = canvas.height / 2;
+
+  for (let i = 0; i < 80; i++) {
+    const angle = Math.random() * Math.PI * 2;
+    const speed = 0.3 + Math.random() * 1.2;
+    particles.push({
+      x: cx + (Math.random()-0.5)*60,
+      y: cy + (Math.random()-0.5)*60,
+      vx: Math.cos(angle) * speed,
+      vy: Math.sin(angle) * speed - 0.5,
+      r: Math.random() * 3 + 1,
+      opacity: Math.random(),
+      life: Math.random(),
+      decay: 0.004 + Math.random() * 0.006,
+      color: `hsl(${38+Math.random()*20},90%,${65+Math.random()*20}%)`
+    });
+  }
+
+  function animP() {
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    particles.forEach(p => {
+      p.x += p.vx; p.y += p.vy;
+      p.life -= p.decay;
+      if (p.life <= 0) {
+        p.life = 1;
+        p.x = cx + (Math.random()-0.5)*80;
+        p.y = cy + (Math.random()-0.5)*80;
+        p.vx = Math.cos(Math.random()*Math.PI*2) * (0.3+Math.random()*1.2);
+        p.vy = Math.sin(Math.random()*Math.PI*2) * (0.3+Math.random()*1.2) - 0.5;
+      }
+      ctx.beginPath();
+      ctx.arc(p.x, p.y, p.r * p.life, 0, Math.PI*2);
+      ctx.fillStyle = p.color;
+      ctx.globalAlpha = p.life * 0.85;
+      ctx.fill();
+    });
+    ctx.globalAlpha = 1;
+    requestAnimationFrame(animP);
+  }
+  animP();
+}
+
+// ---- Typewriter ----
+function typeText(el, text, speed, onDone) {
+  let i = 0;
+  const interval = setInterval(() => {
+    el.textContent += text[i];
+    i++;
+    if (i >= text.length) { clearInterval(interval); if (onDone) onDone(); }
+  }, speed);
+}
+
+function showNbQuote() {
+  const wrap = document.getElementById('nb-quote-wrap');
+  wrap.classList.add('show');
+
+  const line1 = document.getElementById('nb-text1');
+  const cur1 = document.getElementById('nb-cursor1');
+  const line2 = document.getElementById('nb-text2');
+  const cur2 = document.getElementById('nb-cursor2');
+
+  typeText(line1, 'All the very best for your new beginning.', 55, () => {
+    // Pause, then move cursor to line 2
+    setTimeout(() => {
+      cur1.style.display = 'none';
+      cur2.style.display = 'inline-block';
+      setTimeout(() => {
+        typeText(line2, 'Love you, Ammu. Always. 🌸', 70, () => {
+          // Remove cursor after done
+          setTimeout(() => { cur2.style.display = 'none'; }, 1500);
+        });
+      }, 400);
+    }, 600);
+  });
+}
+
+// ---- Petal rain ----
+function startPetalRain() {
+  const canvas = document.getElementById('nb-petals-canvas');
+  canvas.width = canvas.offsetWidth;
+  canvas.height = canvas.offsetHeight;
+  const ctx = canvas.getContext('2d');
+  const petals = [];
+  const petalEmojis = ['🌸','🌺','🌷','✿','❀'];
+
+  for (let i = 0; i < 40; i++) {
+    petals.push({
+      x: Math.random() * canvas.width,
+      y: -40 - Math.random() * canvas.height,
+      vy: 0.6 + Math.random() * 1.2,
+      vx: (Math.random()-0.5) * 0.8,
+      r: Math.random() * Math.PI * 2,
+      vr: (Math.random()-0.5) * 0.03,
+      size: 14 + Math.random() * 16,
+      emoji: petalEmojis[Math.floor(Math.random()*petalEmojis.length)],
+      opacity: 0.6 + Math.random() * 0.4,
+      delay: Math.random() * 5000
+    });
+  }
+
+  let startTime = null;
+  function animPetals(ts) {
+    if (!startTime) startTime = ts;
+    ctx.clearRect(0, 0, canvas.width, canvas.height);
+    petals.forEach(p => {
+      if (ts - startTime < p.delay) return;
+      p.x += p.vx; p.y += p.vy; p.r += p.vr;
+      if (p.y > canvas.height + 40) { p.y = -40; p.x = Math.random() * canvas.width; }
+      ctx.save();
+      ctx.globalAlpha = p.opacity;
+      ctx.font = `${p.size}px serif`;
+      ctx.translate(p.x, p.y);
+      ctx.rotate(p.r);
+      ctx.fillText(p.emoji, -p.size/2, p.size/2);
+      ctx.restore();
+    });
+    requestAnimationFrame(animPetals);
+  }
+  requestAnimationFrame(animPetals);
+}
 </script>
 </body>
 </html>
